@@ -17,15 +17,17 @@
 
 #define PASSWORD_MAX 13
 
-static TCHAR winclass[] = TEXT("mainwindow");
+static TCHAR winclass[] = TEXT("password");
 static TCHAR wintitle[] = TEXT("password");
+
 static int win_left = 500;
 static int win_top = 200;
-static int win_width = 260;
+static int win_width = 300;
 static int win_height = 80;
 
 static HWND hwndEdit = NULL;
 static HWND hwndButton = NULL;
+static HWND hwndInfo = NULL;
 
 static char valid_chars[] = {
   '*', '#', '@', '=',
@@ -52,6 +54,8 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPar
     srand((unsigned)time(NULL));
     hwndEdit = CreateWindow(L"edit", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER, 30, 10, 150, 20, hwnd, NULL, NULL, NULL);
     hwndButton = CreateWindow(L"button", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER, 190, 10, 20, 20, hwnd, NULL, NULL, NULL);
+    hwndInfo = CreateWindow(L"button", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER, 220, 10, 40, 20, hwnd, NULL, NULL, NULL);
+    SetWindowText(hwndInfo, L"@");
     return 0;
   case WM_COMMAND:
     if ((HWND)lParam == hwndButton) {
@@ -63,6 +67,11 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         password[PASSWORD_MAX-1] = '\0';
         wprintf(L"%s\n", password);
         SetWindowText(hwndEdit, password);
+      }
+    }
+    if ((HWND)lParam == hwndInfo) {
+      if (BN_CLICKED == HIWORD(wParam)) {
+        ShellExecute(0, L"open", L"https://github.com/kavin-zhuang/password_generator", NULL, 0, 0);
       }
     }
     return 0;
